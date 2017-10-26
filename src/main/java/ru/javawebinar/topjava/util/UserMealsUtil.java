@@ -3,11 +3,11 @@ package ru.javawebinar.topjava.util;
 import ru.javawebinar.topjava.model.UserMeal;
 import ru.javawebinar.topjava.model.UserMealWithExceed;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.Month;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 /**
  * GKislin
@@ -29,8 +29,43 @@ public class UserMealsUtil {
     }
 
     public static List<UserMealWithExceed>  getFilteredWithExceeded(List<UserMeal> mealList, LocalTime startTime, LocalTime endTime, int caloriesPerDay) {
-        // TODO return filtered list with correctly exceeded field
-        System.out.println("TODO return filtered list with correctly exceeded field");
-        return null;
+
+        List<UserMealWithExceed> resultList = new ArrayList<>();
+
+        Map<LocalDate, List<UserMeal>> userMealMapPerDate = new HashMap<>();
+
+        for (UserMeal userMeal : mealList ) {
+            if (!userMealMapPerDate.containsKey(userMeal.getDateTime().toLocalDate())) {
+                ArrayList<UserMeal> userMeals = new ArrayList<>();
+                userMeals.add(userMeal);
+                userMealMapPerDate.put(userMeal.getDateTime().toLocalDate(), userMeals);
+            } else {
+                userMealMapPerDate.get(userMeal.getDateTime().toLocalDate()).add(userMeal);
+            }
+
+        }
+
+        for (Map.Entry<LocalDate, List<UserMeal>> entry : userMealMapPerDate.entrySet() ) {
+
+            int sumCaloriesPerDate = 0;
+
+            for (UserMeal userMeal :entry.getValue()) {
+                sumCaloriesPerDate += userMeal.getCalories();
+            }
+
+            if (sumCaloriesPerDate > caloriesPerDay ) {
+                for (UserMeal userMeal :entry.getValue() ) {
+                    if (userMeal.getDateTime().toLocalTime().isAfter(startTime) && userMeal.getDateTime().toLocalTime().isBefore(endTime))
+                        resultList.add(new UserMealWithExceed(userMeal.getDateTime(), userMeal.getDescription(), userMeal.getCalories(), true));
+                }
+            } else {
+                for (UserMeal userMeal :entry.getValue() ) {
+                    if (userMeal.getDateTime().toLocalTime().isAfter(startTime) && userMeal.getDateTime().toLocalTime().isBefore(endTime))
+                        resultList.add(new UserMealWithExceed(userMeal.getDateTime(), userMeal.getDescription(), userMeal.getCalories(), false));
+                }
+            }
+        }
+
+        return resultList;
     }
 }
