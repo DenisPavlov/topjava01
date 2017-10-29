@@ -8,6 +8,7 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.Month;
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * GKislin
@@ -30,22 +31,21 @@ public class UserMealsUtil {
 
     public static List<UserMealWithExceed> getFilteredWithExceeded(List<UserMeal> mealList, LocalTime startTime, LocalTime endTime, int caloriesPerDay) {
 
-        List<UserMealWithExceed> resultList = new ArrayList<>();
+        Map<LocalDate, Integer> caloriesPeyDateMap = mealList
+                .stream()
+                .collect( Collectors.toMap(
+                        userMeal -> userMeal.getDateTime().toLocalDate(),
+                        UserMeal::getCalories,
+                        Integer::sum ));
 
-        Map<LocalDate, Integer> caloriesPeyDateMap = new HashMap<>();
 
-        mealList.forEach(userMeal -> caloriesPeyDateMap.merge(userMeal.getDateTime().toLocalDate(), userMeal.getCalories(), (integer, integer2) -> integer + integer2));
-
-        mealList.forEach(userMeal -> {
-
-            if (TimeUtil.isBetween(userMeal.getDateTime().toLocalTime(), startTime, endTime)) {
-                int sumCaloriesPerDay = caloriesPeyDateMap.get(userMeal.getDateTime().toLocalDate());
-
-                boolean exceed = sumCaloriesPerDay > caloriesPerDay;
-
-                resultList.add(new UserMealWithExceed(userMeal.getDateTime(), userMeal.getDescription(), userMeal.getCalories(), exceed));
-            }
-        });
+        List<UserMealWithExceed> resultList = mealList.stream()
+                .filter(userMeal -> TimeUtil.isBetween(userMeal.getDateTime().toLocalTime(), startTime, endTime))
+                .map(userMeal -> {
+                    boolean exceed = caloriesPeyDateMap.get(userMeal.getDateTime().toLocalDate()) > caloriesPerDay;
+                    return new UserMealWithExceed(userMeal.getDateTime(), userMeal.getDescription(), userMeal.getCalories(), exceed);
+                })
+                .collect(Collectors.toList());
 
         return resultList;
     }
