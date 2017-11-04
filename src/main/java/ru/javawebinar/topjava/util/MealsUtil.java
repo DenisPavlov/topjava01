@@ -50,7 +50,7 @@ public class MealsUtil {
         return meals;
     }
 
-    public static List<MealWithExceed> getWithExceeded(List<Meal> meals, int caloriesPerDay){
+    public static List<MealWithExceed> getMealWithExceeded(List<Meal> meals, int caloriesPerDay){
         return getFilteredWithExceeded(meals, LocalTime.MIN, LocalTime.MAX, caloriesPerDay);
     }
 
