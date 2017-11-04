@@ -10,7 +10,6 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 import static org.slf4j.LoggerFactory.getLogger;
@@ -23,7 +22,7 @@ public class MealServlet extends HttpServlet {
         List<Meal> meals = MealsUtil.getMeals();
         List<MealWithExceed> mealWithExceedList = MealsUtil.getMealWithExceeded(meals, 2000);
         request.setAttribute("mealWithExceedList", mealWithExceedList);
-        request.setAttribute("dateTimeFormat", DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));
+        request.setAttribute("dateTimeFormat", MealsUtil.formatter);
 
         request.getRequestDispatcher("/meals.jsp").forward(request, response);
     }
