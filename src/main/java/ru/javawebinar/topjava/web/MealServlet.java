@@ -30,16 +30,19 @@ public class MealServlet extends HttpServlet {
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         request.setCharacterEncoding("UTF-8");
-
         LocalDateTime dateTime = LocalDateTime.parse(request.getParameter("dateTime"));
-        Meal meal = new Meal(dateTime, request.getParameter("description"), Integer.parseInt(request.getParameter("calories")));
 
-        mealsDao.addMeal(meal);
+        String idParametr = request.getParameter("mealId");
+        if (idParametr != null) {
+            Meal meal = new Meal(dateTime, request.getParameter("description"), Integer.parseInt(request.getParameter("calories")));
+            meal.setId(Integer.parseInt(idParametr));
+            mealsDao.updateMeal(meal);
+        } else {
+            Meal meal = new Meal(dateTime, request.getParameter("description"), Integer.parseInt(request.getParameter("calories")));
+            mealsDao.addMeal(meal);
+        }
 
-        List<MealWithExceed> mealWithExceedList = MealsUtil.getMealWithExceeded(mealsDao.getMeals(), 2000);
-        request.setAttribute("mealWithExceedList", mealWithExceedList);
-        request.setAttribute("dateTimeFormat", formatter);
-        request.getRequestDispatcher("/meals.jsp").forward(request, response);
+        toListMeal(request,response);
     }
 
     @Override

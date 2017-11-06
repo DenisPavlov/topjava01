@@ -68,6 +68,18 @@ public class MealsDaoImplForRAM implements MealsDao {
         return null;
     }
 
+    @Override
+    public void updateMeal(Meal meal) {
+        int index = 0;
+        for (Meal currMeal : meals ) {
+            if (currMeal.getId() == meal.getId()) {
+                index = meals.indexOf(currMeal);
+                break;
+            }
+        }
+        if (index != 0) meals.set(index, meal);
+    }
+
     //добавить одну запись и инкремент счетчика
     private Meal getNewMeal(LocalDateTime dateTime, String description, int calories) {
         Meal meal = meal = new Meal(dateTime, description, calories);
