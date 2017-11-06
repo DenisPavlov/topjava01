@@ -20,14 +20,6 @@ public class MealWithExceed {
         this.exceed = exceed;
     }
 
-    public MealWithExceed(int id, LocalDateTime dateTime, String description, int calories, boolean exceed) {
-        this.id = id;
-        this.dateTime = dateTime;
-        this.description = description;
-        this.calories = calories;
-        this.exceed = exceed;
-    }
-
     public int getId() {
         return id;
     }
