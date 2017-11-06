@@ -18,10 +18,10 @@
         <th>Калории</th>
         </thead>
 
-        <tbody style="color: green">
+        <tbody>
 
         <c:forEach items="${mealWithExceedList}" var="meal">
-            <tr style="color: <c:out value="${ meal.exceed ?  'red': 'grean'}"/>" >
+            <tr style="color: <c:out value="${ meal.exceed ?  'red': 'green'}"/>" >
                 <td style="padding: 8px">${meal.getDateTime().format(dateTimeFormat)}</td>
                 <td style="padding: 8px">${meal.description}</td>
                 <td style="padding: 8px">${meal.calories}</td>

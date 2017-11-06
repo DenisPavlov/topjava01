@@ -30,12 +30,12 @@ public class MealsDaoImplForRAM implements MealsDao {
     public List<Meal> getMeals() {
         if (meals == null) {
             meals = new CopyOnWriteArrayList<>(Arrays.asList(
-                    getNewMeal(LocalDateTime.of(2015, Month.MAY, 30, 10, 0), "Завтрак", 500),
-                    getNewMeal(LocalDateTime.of(2015, Month.MAY, 30, 13, 0), "Обед", 1000),
-                    getNewMeal(LocalDateTime.of(2015, Month.MAY, 30, 20, 0), "Ужин", 500),
-                    getNewMeal(LocalDateTime.of(2015, Month.MAY, 31, 10, 0), "Завтрак", 1000),
-                    getNewMeal(LocalDateTime.of(2015, Month.MAY, 31, 13, 0), "Обед", 500),
-                    getNewMeal(LocalDateTime.of(2015, Month.MAY, 31, 20, 0), "Ужин", 510)
+                    createNewMeal(LocalDateTime.of(2015, Month.MAY, 30, 10, 0), "Завтрак", 500),
+                    createNewMeal(LocalDateTime.of(2015, Month.MAY, 30, 13, 0), "Обед", 1000),
+                    createNewMeal(LocalDateTime.of(2015, Month.MAY, 30, 20, 0), "Ужин", 500),
+                    createNewMeal(LocalDateTime.of(2015, Month.MAY, 31, 10, 0), "Завтрак", 1000),
+                    createNewMeal(LocalDateTime.of(2015, Month.MAY, 31, 13, 0), "Обед", 500),
+                    createNewMeal(LocalDateTime.of(2015, Month.MAY, 31, 20, 0), "Ужин", 510)
             ));
         }
         return meals;
@@ -43,7 +43,7 @@ public class MealsDaoImplForRAM implements MealsDao {
 
     @Override
     public void addMeal(Meal meal) {
-        meal = getNewMeal(meal);
+        meal = createNewMeal(meal);
         meals.add(meal);
     }
 
@@ -74,20 +74,20 @@ public class MealsDaoImplForRAM implements MealsDao {
         for (Meal currMeal : meals ) {
             if (currMeal.getId() == meal.getId()) {
                 index = meals.indexOf(currMeal);
+                meals.set(index, meal);
                 break;
             }
         }
-        if (index != 0) meals.set(index, meal);
     }
 
     //добавить одну запись и инкремент счетчика
-    private Meal getNewMeal(LocalDateTime dateTime, String description, int calories) {
+    private Meal createNewMeal(LocalDateTime dateTime, String description, int calories) {
         Meal meal = meal = new Meal(dateTime, description, calories);
         meal.setId(counter.incrementAndGet());
         return meal;
     }
 
-    private Meal getNewMeal(Meal meal) {
+    private Meal createNewMeal(Meal meal) {
         meal.setId(counter.incrementAndGet());
         return meal;
     }

@@ -33,9 +33,9 @@ public class MealServlet extends HttpServlet {
         LocalDateTime dateTime = LocalDateTime.parse(request.getParameter("dateTime"));
         Meal meal = new Meal(dateTime, request.getParameter("description"), Integer.parseInt(request.getParameter("calories")));
 
-        String idParametr = request.getParameter("mealId");
-        if (idParametr != null && !idParametr.isEmpty()) {
-            meal.setId(Integer.parseInt(idParametr));
+        String idParameter = request.getParameter("mealId");
+        if (idParameter != null && !idParameter.isEmpty()) {
+            meal.setId(Integer.parseInt(idParameter));
             mealsDao.updateMeal(meal);
         } else {
             mealsDao.addMeal(meal);
@@ -59,7 +59,6 @@ public class MealServlet extends HttpServlet {
             int mealId = Integer.parseInt(request.getParameter("mealId"));
             Meal meal = mealsDao.getMealById(mealId);
             request.setAttribute("meal", meal);
-            request.setAttribute("dateTimeFormat", formatter);
             request.getRequestDispatcher("/addmeal.jsp").forward(request, response);
         }
 
