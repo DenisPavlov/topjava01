@@ -17,12 +17,11 @@
         <th>Описание</th>
         <th>Калории</th>
         </thead>
-        <%--со стилями не стал особо заморачиваться, на крастоу нужно время--%>
+
         <tbody style="color: green">
 
         <c:forEach items="${mealWithExceedList}" var="meal">
-            <%--использовать тернарный оператор--%>
-            <tr style=" <c:if test="${meal.exceed}">color: red </c:if>" >
+            <tr style="color: <c:out value="${ meal.exceed ?  'red': 'grean'}"/>" >
                 <td style="padding: 8px">${meal.getDateTime().format(dateTimeFormat)}</td>
                 <td style="padding: 8px">${meal.description}</td>
                 <td style="padding: 8px">${meal.calories}</td>
@@ -31,9 +30,6 @@
             </tr>
         </c:forEach>
 
-        <%--<c:if test="${param.age gt 12}" var="if_less_12">--%>
-        <%--Возраст более 12 лет--%>
-        <%--</c:if>--%>
 
         </tbody>
     </table>
