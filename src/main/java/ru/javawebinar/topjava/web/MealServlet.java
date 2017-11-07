@@ -23,8 +23,9 @@ public class MealServlet extends HttpServlet {
     private static DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
     private MealsDao mealsDao;
 
-    public MealServlet() {
-        super();
+    @Override
+    public void init() throws ServletException {
+        super.init();
         this.mealsDao = new MealsDaoImplForRAM();
     }
 
@@ -36,9 +37,9 @@ public class MealServlet extends HttpServlet {
         String idParameter = request.getParameter("mealId");
         if (idParameter != null && !idParameter.isEmpty()) {
             meal.setId(Integer.parseInt(idParameter));
-            mealsDao.updateMeal(meal);
+            mealsDao.update(meal);
         } else {
-            mealsDao.addMeal(meal);
+            mealsDao.create(meal);
         }
 
         toListMeal(request,response);
@@ -53,7 +54,7 @@ public class MealServlet extends HttpServlet {
             toListMeal(request, response);
         } else if ( action.equalsIgnoreCase("delete")) {
             int mealId = Integer.parseInt(request.getParameter("mealId"));
-            mealsDao.deleteMeal(mealId);
+            mealsDao.delete(mealId);
             response.sendRedirect("meals");
         } else if (action.equalsIgnoreCase("edit")) {
             int mealId = Integer.parseInt(request.getParameter("mealId"));
@@ -66,8 +67,8 @@ public class MealServlet extends HttpServlet {
     }
 
     private void toListMeal(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        List<Meal> meals = mealsDao.getMeals();
-        List<MealWithExceed> mealWithExceedList = MealsUtil.getMealWithExceeded(meals, 2000);
+        List<Meal> meals = mealsDao.getAll();
+        List<MealWithExceed> mealWithExceedList = MealsUtil.getWithExceeded(meals, 2000);
         request.setAttribute("mealWithExceedList", mealWithExceedList);
         request.setAttribute("dateTimeFormat", formatter);
         request.getRequestDispatcher("/meals.jsp").forward(request, response);

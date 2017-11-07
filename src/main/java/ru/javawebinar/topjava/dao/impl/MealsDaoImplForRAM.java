@@ -17,74 +17,53 @@ public class MealsDaoImplForRAM implements MealsDao {
 
     private static final Logger log = getLogger(MealsDaoImplForRAM.class);
 
-    private static CopyOnWriteArrayList<Meal> meals;
+    private CopyOnWriteArrayList<Meal> meals;
 
-    //счетчик
-    private static AtomicInteger counter;
+    private AtomicInteger counter;
 
     public MealsDaoImplForRAM() {
         if (counter==null) counter = new AtomicInteger(0);
+        if (meals == null) {
+            meals = new CopyOnWriteArrayList<>(Arrays.asList(
+                    createNewMeal(new Meal(LocalDateTime.of(2015, Month.MAY, 30, 10, 0), "Завтрак", 500)),
+                    createNewMeal(new Meal(LocalDateTime.of(2015, Month.MAY, 30, 13, 0), "Обед", 1000)),
+                    createNewMeal(new Meal(LocalDateTime.of(2015, Month.MAY, 30, 20, 0), "Ужин", 500)),
+                    createNewMeal(new Meal(LocalDateTime.of(2015, Month.MAY, 31, 10, 0), "Завтрак", 1000)),
+                    createNewMeal(new Meal(LocalDateTime.of(2015, Month.MAY, 31, 13, 0), "Обед", 500)),
+                    createNewMeal(new Meal(LocalDateTime.of(2015, Month.MAY, 31, 20, 0), "Ужин", 510))
+            ));
+        }
     }
 
     @Override
-    public List<Meal> getMeals() {
-        if (meals == null) {
-            meals = new CopyOnWriteArrayList<>(Arrays.asList(
-                    createNewMeal(LocalDateTime.of(2015, Month.MAY, 30, 10, 0), "Завтрак", 500),
-                    createNewMeal(LocalDateTime.of(2015, Month.MAY, 30, 13, 0), "Обед", 1000),
-                    createNewMeal(LocalDateTime.of(2015, Month.MAY, 30, 20, 0), "Ужин", 500),
-                    createNewMeal(LocalDateTime.of(2015, Month.MAY, 31, 10, 0), "Завтрак", 1000),
-                    createNewMeal(LocalDateTime.of(2015, Month.MAY, 31, 13, 0), "Обед", 500),
-                    createNewMeal(LocalDateTime.of(2015, Month.MAY, 31, 20, 0), "Ужин", 510)
-            ));
-        }
+    public List<Meal> getAll() {
         return meals;
     }
 
     @Override
-    public void addMeal(Meal meal) {
-        meal = createNewMeal(meal);
-        meals.add(meal);
+    public Meal create(Meal meal) {
+        meals.add(createNewMeal(meal));
+        return meal;
     }
 
     @Override
-    public void deleteMeal(int mealId) {
-        Meal curMeal = null;
-
-        for (Meal meal : meals ) {
-            if (meal.getId() == mealId) {
-                curMeal = meal;
-                break;
-            }
-        }
-        if (curMeal != null) meals.remove(curMeal);
+    public boolean delete(int id) {
+        Meal meal = getMealById(id);
+        return meals.remove(meal);
     }
 
     @Override
-    public Meal getMealById(int mealId) {
+    public Meal getMealById(int id) {
         for (Meal meal : meals ) {
-            if (meal.getId() == mealId) return meal;
+            if (meal.getId() == id) return meal;
         }
         return null;
     }
 
     @Override
-    public void updateMeal(Meal meal) {
-        int index = 0;
-        for (Meal currMeal : meals ) {
-            if (currMeal.getId() == meal.getId()) {
-                index = meals.indexOf(currMeal);
-                meals.set(index, meal);
-                break;
-            }
-        }
-    }
-
-    //добавить одну запись и инкремент счетчика
-    private Meal createNewMeal(LocalDateTime dateTime, String description, int calories) {
-        Meal meal = meal = new Meal(dateTime, description, calories);
-        meal.setId(counter.incrementAndGet());
-        return meal;
+    public void update(Meal meal) {
+        Meal curMeal = getMealById(meal.getId());
+        meals.set(meals.indexOf(curMeal), meal);
     }
 
     private Meal createNewMeal(Meal meal) {
