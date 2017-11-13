@@ -3,6 +3,7 @@ package ru.javawebinar.topjava.model;
 import java.util.Date;
 import java.util.EnumSet;
 import java.util.Set;
+import java.util.StringJoiner;
 
 import static ru.javawebinar.topjava.util.MealsUtil.DEFAULT_CALORIES_PER_DAY;
 
@@ -87,5 +88,12 @@ public class User extends AbstractNamedEntity {
                 ", roles=" + roles +
                 ", caloriesPerDay=" + caloriesPerDay +
                 ')';
+    }
+
+    public int compareTo(User user) {
+        if (getName().equals(user.getName())) {
+            return getName().concat(getEmail()).compareTo(user.getName().concat(user.getEmail()));
+        }
+        return getName().compareTo(user.getName());
     }
 }

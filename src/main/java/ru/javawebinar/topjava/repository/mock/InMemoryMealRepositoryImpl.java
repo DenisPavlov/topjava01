@@ -21,7 +21,8 @@ public class InMemoryMealRepositoryImpl implements MealRepository {
 
     {
         // TODO: 13.11.17 Изменить при работе с БД.
-        MealsUtil.MEALS.forEach(meal -> save(meal, AuthorizedUser.id()));
+        MealsUtil.MEALS.forEach(meal -> save(meal, 2));
+        MealsUtil.MEALS.forEach(meal -> save(meal, 1));
     }
 
     @Override
@@ -43,7 +44,7 @@ public class InMemoryMealRepositoryImpl implements MealRepository {
     @Override
     public Meal get(int id, int userId) {
         Meal result = repository.get(id);
-        return result.getUserId() == userId ? result : null;
+        return result == null || result.getUserId() != userId ? null : result;
     }
 
     @Override

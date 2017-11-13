@@ -48,6 +48,29 @@
             </tr>
         </c:forEach>
     </table>
+
+    <form method="get" action="meals">
+        <input type="hidden" name="action" value="filter">
+        <dl>
+            <dt>От даты:</dt>
+            <dd><input type="date" name="startDate"></dd>
+        </dl>
+        <dl>
+            <dt>До даты:</dt>
+            <dd><input type="date"  name="endDate"></dd>
+        </dl>
+        <dl>
+            <dt>От времени:</dt>
+            <dd><input type="time" name="startTime"></dd>
+        </dl>
+        <dl>
+            <dt>До времени:</dt>
+            <dd><input type="time"  name="endTime"></dd>
+        </dl>
+        <button type="submit">Фильтр</button>
+        <button onclick="window.history.back()" type="button">Cancel</button>
+    </form>
+
 </section>
 </body>
 </html>

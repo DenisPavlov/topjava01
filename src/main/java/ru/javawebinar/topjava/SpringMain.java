@@ -35,16 +35,23 @@ public class SpringMain {
             }
 
             System.out.println("Получил новую");
-            System.out.println(mealRestController.get(7));
+            System.out.println(mealRestController.get(1));
 
-            meal = new Meal(meal.getId(), meal.getDateTime(), meal.getDescription(), 333, AuthorizedUser.id());
+            meal = new Meal(7, meal.getDateTime(), meal.getDescription(), 333, 1);
             System.out.println("Обновил одну еду");
             mealRestController.update(meal);
             System.out.println(mealRestController.getAll());
 
+            //удалить еду
+//            mealRestController.delete(10);
+
+
             //создать еду пользователю с id = 2
 //            Meal meal2 = new Meal(LocalDateTime.of(2015, Month.MAY, 30, 10, 0), "Завтрак", 999, 2);
 //            mealRestController.create(meal2);
+
+            //пользователь с id = 1 пробут удалить еду с id = 2
+//            mealRestController.delete(5);
         }
     }
 }

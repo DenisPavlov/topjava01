@@ -10,6 +10,8 @@ import ru.javawebinar.topjava.service.MealService;
 import ru.javawebinar.topjava.to.MealWithExceed;
 import ru.javawebinar.topjava.util.MealsUtil;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.List;
 
 import static ru.javawebinar.topjava.util.ValidationUtil.assureUserIdConsistent;
@@ -25,7 +27,7 @@ public class MealRestController {
     public Meal create(Meal meal){
         log.info("create {}", meal);
         checkNew(meal);
-        assureUserIdConsistent(meal, AuthorizedUser.id());
+//        assureUserIdConsistent(meal, AuthorizedUser.id());
         return service.create(meal, AuthorizedUser.id());
     }
 
@@ -50,10 +52,19 @@ public class MealRestController {
         service.update(meal, AuthorizedUser.id());
     }
 
-    public List<MealWithExceed> geMealWithExceeds() {
-        log.info("geMealWithExceeds");
+    public List<MealWithExceed> getMealWithExceeds() {
+        log.info("getMealWithExceeds");
         return MealsUtil.getWithExceeded(service.getAll(AuthorizedUser.id()), MealsUtil.DEFAULT_CALORIES_PER_DAY);
 
+    }
+
+    public List<MealWithExceed> getFilteredMealWithExceeds(String startDate, String endDate, String startTime, String endTime) {
+        log.info("getFiltererWithExceedForDateTime");
+        LocalDate startВ = startDate.equals("") ? LocalDate.MIN : LocalDate.parse(startDate);
+        LocalDate endD = endDate.equals("") ? LocalDate.MAX : LocalDate.parse(endDate);
+        LocalTime startT = startTime.equals("") ? LocalTime.MIN : LocalTime.parse(startTime);
+        LocalTime endT = endTime.equals("") ? LocalTime.MAX : LocalTime.parse(endTime);
+        return MealsUtil.getFiltererWithExceedForDateTime(getMealWithExceeds(), startВ, endD, startT, endT);
     }
 
 }
