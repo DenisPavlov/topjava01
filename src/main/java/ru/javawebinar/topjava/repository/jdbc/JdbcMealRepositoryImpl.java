@@ -38,6 +38,7 @@ public class JdbcMealRepositoryImpl implements MealRepository {
     }
 
     @Override
+    // TODO: 22.11.17 метод не обновляет надо отдавать пустой
     public Meal save(Meal meal, int userId) {
         MapSqlParameterSource map = new MapSqlParameterSource()
                 .addValue("id", meal.getId())
@@ -51,10 +52,10 @@ public class JdbcMealRepositoryImpl implements MealRepository {
             meal.setId(newKey.intValue());
         } else {
             namedParameterJdbcTemplate.update(
-                    "UPDATE meals SET datetime=:datetime, description=:description, calories=:calories, " +
-                            "user_id=:user_id WHERE id=:id", map);
+                    "UPDATE meals SET datetime=:datetime, description=:description, calories=:calories " +
+                            " WHERE id=:id AND user_id=:user_id", map);
         }
-        return meal;
+        return get(meal.getId(), userId);
     }
 
     @Override
@@ -70,13 +71,12 @@ public class JdbcMealRepositoryImpl implements MealRepository {
 
     @Override
     public List<Meal> getAll(int userId) {
-        // TODO: 21.11.17 Добавить сортировку выходного листа (ORDER BY)
         return jdbcTemplate.query("SELECT * FROM meals WHERE user_id=? ORDER BY datetime DESC", ROW_MAPPER, userId);
     }
 
     @Override
     public List<Meal> getBetween(LocalDateTime startDate, LocalDateTime endDate, int userId) {
-        return jdbcTemplate.query("SELECT * FROM meals WHERE user_id=? AND  datetime BETWEEN ? AND ?",
+        return jdbcTemplate.query("SELECT * FROM meals WHERE user_id=? AND  datetime BETWEEN ? AND ? ORDER BY datetime DESC",
                 ROW_MAPPER, userId, startDate, endDate);
     }
 }

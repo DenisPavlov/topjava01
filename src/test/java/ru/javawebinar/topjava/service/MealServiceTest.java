@@ -9,13 +9,12 @@ import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.jdbc.SqlConfig;
 import org.springframework.test.context.junit4.SpringRunner;
 import ru.javawebinar.topjava.model.Meal;
-import ru.javawebinar.topjava.model.Role;
-import ru.javawebinar.topjava.model.User;
+import ru.javawebinar.topjava.util.exception.NotFoundException;
 
 import java.time.LocalDateTime;
 import java.time.Month;
-import java.util.Collections;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static ru.javawebinar.topjava.MealTestDate.*;
 
 @ContextConfiguration({
@@ -41,9 +40,21 @@ public class MealServiceTest {
         assertMatch(meal, USER_MEAL);
     }
 
+    @Test(expected = NotFoundException.class)
+    public void notFoundGet() throws Exception {
+        service.get(USER_MEAL_ID, ADMIN_ID);
+    }
+
     @Test
     public void delete() throws Exception {
-        // TODO: 21.11.17 Реализовать метод
+        service.create(USER_MEAL, USER_ID);
+        service.delete(USER_MEAL.getId(), USER_ID);
+        assertMatch(service.getAll(USER_ID), USER_MEAL);
+    }
+
+    @Test(expected = NotFoundException.class)
+    public void notFoundDelete() throws Exception {
+        service.delete(USER_MEAL_ID, ADMIN_ID);
     }
 
     @Test
@@ -58,22 +69,30 @@ public class MealServiceTest {
 
     @Test
     public void getAll() throws Exception {
-        // TODO: 21.11.17 Реализовать метод
+        assertMatch(service.getAll(USER_ID), USER_MEALS);
     }
 
     @Test
     public void update() throws Exception {
         Meal updated = new Meal(USER_MEAL);
-        updated.setDateTime(LocalDateTime.of(2017, Month.JULY, 14, 10, 0));
-        updated.setCalories(1000);
+        updated.setCalories(10000);
         updated.setDescription("Test user meal");
         service.update(updated, USER_ID);
-        assertMatch(service.get(USER_MEAL.getId(),USER_ID), updated);
+
+        assertThat(service.getAll(USER_ID)).contains(USER_MEAL);
+    }
+
+    // TODO: 21.11.17 update чужую еду
+    @Test(expected = NotFoundException.class)
+    public void notFoundUpdate() throws Exception {
+        Meal updated = new Meal(USER_MEAL);
+        updated.setCalories(10000);
+        updated.setDescription("Test user meal");
+        service.update(updated, ADMIN_ID);
     }
 
     @Test
     public void create() throws Exception {
-        // TODO: 21.11.17 При сравнении исключить id
         Meal meal = new Meal(LocalDateTime.of(2017, Month.JULY, 14, 10, 0), "test create method", 1000);
         Meal created = service.create(meal, USER_ID);
         meal.setId(created.getId());
