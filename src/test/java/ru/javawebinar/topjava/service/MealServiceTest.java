@@ -13,6 +13,7 @@ import ru.javawebinar.topjava.util.exception.NotFoundException;
 
 import java.time.LocalDateTime;
 import java.time.Month;
+import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static ru.javawebinar.topjava.MealTestDate.*;
@@ -59,12 +60,14 @@ public class MealServiceTest {
 
     @Test
     public void getBetweenDates() throws Exception {
-        // TODO: 21.11.17 Реализовать метод
+        List<Meal> meals = service.getBetweenDates(LocalDateTime.of(2017, Month.JULY, 1, 8, 00).toLocalDate(), LocalDateTime.of(2017, Month.JULY, 1, 20, 00).toLocalDate(), USER_ID);
+        assertMatch(meals, USER_MEALS);
     }
 
     @Test
     public void getBetweenDateTimes() throws Exception {
-        // TODO: 21.11.17 Реализовать метод
+        List<Meal> meals = service.getBetweenDateTimes(LocalDateTime.of(2017, Month.JULY, 1, 8, 00), LocalDateTime.of(2017, Month.JULY, 1, 15, 00), USER_ID);
+        assertMatch(meals.get(0), USER_BETWEEN_MEAL);
     }
 
     @Test
@@ -82,7 +85,6 @@ public class MealServiceTest {
         assertThat(service.getAll(USER_ID)).contains(USER_MEAL);
     }
 
-    // TODO: 21.11.17 update чужую еду
     @Test(expected = NotFoundException.class)
     public void notFoundUpdate() throws Exception {
         Meal updated = new Meal(USER_MEAL);

@@ -19,6 +19,7 @@ public class MealTestDate {
     public static final int USER_MEAL_ID = START_SEQ + 2;
 
     public static final Meal USER_MEAL = new Meal(USER_MEAL_ID, LocalDateTime.of(2017, Month.JULY, 1, 8, 0),"Завтрак user", 300 );
+    public static final Meal USER_BETWEEN_MEAL = new Meal(USER_MEAL_ID+1, LocalDateTime.of(2017, Month.JULY, 1, 12, 30),"Обед user", 1700);
 
     public static final List<Meal> USER_MEALS = Arrays.asList(USER_MEAL,
             new Meal(USER_MEAL_ID+1, LocalDateTime.of(2017, Month.JULY, 1, 12, 30),"Обед user", 1700 ),
