@@ -74,13 +74,22 @@ public class MealRestControllerTest extends AbstractControllerTest {
         assertMatch(mealService.get(MEAL1_ID, USER_ID), updated);
     }
 
+//    @Test
+//    public void testGetBetween() throws Exception {
+//        mockMvc.perform(get(REST_URL+ "filter?start=2015-05-31T12:00:00&end=2015-05-31T21:00:00"))
+//                .andDo(print())
+//                .andExpect(status().isOk())
+//                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+//                .andExpect(contentJson(MEAL6, MEAL5));
+//    }
+
     @Test
     public void testGetBetween() throws Exception {
-        mockMvc.perform(get(REST_URL+ "filter?start=2015-05-31T12:00:00&end=2015-05-31T21:00:00"))
+        mockMvc.perform(get(REST_URL+ "filter?startDate=&endDate=&startTime=09:00&endTime=12:00"))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-                .andExpect(contentJson(MEAL6, MEAL5));
+                .andExpect(contentJson(MEAL1, MEAL4));
     }
 
 }
