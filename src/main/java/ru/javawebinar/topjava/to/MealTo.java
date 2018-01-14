@@ -1,15 +1,23 @@
 package ru.javawebinar.topjava.to;
 
+import org.springframework.format.annotation.DateTimeFormat;
+
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
 public class MealTo extends BaseTo implements Serializable {
     private static final long serialVersionUID = 1L;
 
+    @NotNull
+    @DateTimeFormat
     private LocalDateTime dateTime;
 
+    @NotBlank
     private String description;
 
+    @NotNull()
     private int calories;
 
     public MealTo() {
