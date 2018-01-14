@@ -4,7 +4,9 @@ import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import ru.javawebinar.topjava.model.Meal;
+import ru.javawebinar.topjava.to.MealTo;
 import ru.javawebinar.topjava.to.MealWithExceed;
+import ru.javawebinar.topjava.util.MealsUtil;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -28,11 +30,15 @@ public class MealAjaxController extends AbstractMealController {
     }
 
     @PostMapping
-    public void createOrUpdate(MealWithExceed mealWithExceed) {
+    public void createOrUpdate(MealTo mealTo) {
 //        Meal meal = new Meal(id, dateTime, description, calories);
 //        if (meal.isNew()) {
 //            super.create(meal);
 //        }
+
+        if (mealTo.isNew()) {
+            super.create(MealsUtil.createNewFromTo(mealTo));
+        }
     }
 
     @Override
