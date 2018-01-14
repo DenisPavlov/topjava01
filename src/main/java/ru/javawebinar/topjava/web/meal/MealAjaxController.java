@@ -28,14 +28,11 @@ public class MealAjaxController extends AbstractMealController {
     }
 
     @PostMapping
-    public void createOrUpdate(@RequestParam("id") Integer id,
-                               @RequestParam("dateTime") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime dateTime,
-                               @RequestParam("description") String description,
-                               @RequestParam("calories") int calories) {
-        Meal meal = new Meal(id, dateTime, description, calories);
-        if (meal.isNew()) {
-            super.create(meal);
-        }
+    public void createOrUpdate(MealWithExceed mealWithExceed) {
+//        Meal meal = new Meal(id, dateTime, description, calories);
+//        if (meal.isNew()) {
+//            super.create(meal);
+//        }
     }
 
     @Override
