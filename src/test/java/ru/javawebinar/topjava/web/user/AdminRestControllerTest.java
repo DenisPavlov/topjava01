@@ -119,4 +119,22 @@ public class AdminRestControllerTest extends AbstractControllerTest {
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
                 .andExpect(contentJson(ADMIN, USER)));
     }
+
+    @Test
+    public void testCreateNotValid() throws Exception {
+         mockMvc.perform(post(REST_URL)
+                .contentType(MediaType.APPLICATION_JSON)
+                .with(userHttpBasic(ADMIN))
+                .content(UserTestData.jsonWithPassword(USER, "")))
+                .andExpect(status().isUnprocessableEntity());
+    }
+
+    @Test
+    public void testUpdateNotValid() throws Exception {
+        mockMvc.perform(put(REST_URL + USER_ID)
+                .contentType(MediaType.APPLICATION_JSON)
+                .with(userHttpBasic(ADMIN))
+                .content(UserTestData.jsonWithPassword(USER, "")))
+                .andExpect(status().isUnprocessableEntity());
+    }
 }
