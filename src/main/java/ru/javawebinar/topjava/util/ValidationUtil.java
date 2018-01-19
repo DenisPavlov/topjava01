@@ -59,6 +59,10 @@ public class ValidationUtil {
     }
 
     public static ResponseEntity<String> getErrorResponse(BindingResult result) {
+        return new ResponseEntity<>(getErrorMessage(result), HttpStatus.UNPROCESSABLE_ENTITY);
+    }
+
+    public static String getErrorMessage(BindingResult result) {
         StringJoiner joiner = new StringJoiner("<br>");
         result.getFieldErrors().forEach(
                 fe -> {
@@ -68,6 +72,7 @@ public class ValidationUtil {
                     }
                     joiner.add(msg);
                 });
-        return new ResponseEntity<>(joiner.toString(), HttpStatus.UNPROCESSABLE_ENTITY);
+
+        return joiner.toString();
     }
 }
